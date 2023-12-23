@@ -6,10 +6,12 @@ const {
   updateUserStatus,
   getCurrentUser,
   updateAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 } = require("../../controllers");
 const { ctrlWrapper, validateBody } = require("../../helpers");
 const { userAuth, upload } = require("../../middlewares");
-const { authSchema } = require("../../models");
+const { authSchema, emailSchema } = require("../../models");
 
 const router = express.Router();
 
@@ -28,6 +30,14 @@ router.patch(
   userAuth,
   upload.single("avatar"),
   ctrlWrapper(updateAvatar)
+);
+
+router.get("/verify/:verificationToken", ctrlWrapper(verifyEmail));
+
+router.post(
+  "/verify",
+  validateBody(emailSchema),
+  ctrlWrapper(resendVerifyEmail)
 );
 
 module.exports = router;
